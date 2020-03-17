@@ -22,7 +22,7 @@
           shell: python ../../utils/name_generator/namesgenerator.py
           register: cluster_name
           when: not cluster_name
-
+        
         - set_fact: zone="us-east1-b"
           when: not zone
 
@@ -30,8 +30,13 @@
           shell: cat ~/logs/vpc
           register: vpc
 
-        - set_fact:
-            cluster_name: "{{ cluster_name.stdout }}"
+        - name: Apppending pipeline_id to the Cluster name
+          set_fact:
+            cluster_name: "{{ 'cluster' + '-' + pipeline_id + '-' + cluster_name.stdout }}"
+
+        - name: echo Cluster name
+          shell: echo {{ cluster_name }}
+
         - set_fact:
             vpc: "{{ vpc.stdout }}"
 

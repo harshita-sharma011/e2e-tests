@@ -15,8 +15,14 @@
              - name: Generating Random VPC Name
                shell: python ../../utils/name_generator/namesgenerator.py
                register: vpc
-             - set_fact:
-                 vpc: "{{ vpc.stdout }}"
+              
+             - name: Apppending pipeline_id to the VPC name
+               set_fact:
+                 vpc: "{{ 'vpc' + '-' + pipeline_id + '-' + vpc.stdout }}"
+
+             - name: echo VPC name
+               shell: echo {{ vpc }}
+
              - name: Creating VPC
                shell: gcloud compute --project={{ project }} networks create {{ vpc }} --subnet-mode=auto
 
